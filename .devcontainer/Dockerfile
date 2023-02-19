@@ -4,17 +4,16 @@ FROM ubuntu:18.04
 # Add any tools that are needed
 RUN apt-get update && \
     apt-get install -y sudo \
-        vim \
-        make \
-        git \
-        zip \
-        tree \
-        curl \
-        wget \
-        jq \
-        software-properties-common \
-        python3-pip \
-        python3-dev
+    make \
+    git \
+    zip \
+    tree \
+    curl \
+    wget \
+    jq \
+    software-properties-common \
+    python3-pip \
+    python3-dev
 
 # Installing K3D for local Kubernetes development
 RUN curl -s "https://raw.githubusercontent.com/rancher/k3d/main/install.sh" | sudo bash
