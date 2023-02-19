@@ -57,6 +57,17 @@ def create_accounts():
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
+
+@app.route("/accounts", methods=["GET"])
+def list_accounts():
+    app.logger.info(f"request to read all accounts")
+    accounts = []
+    for account in Account.all():
+        accounts.append(account.serialize())
+    app.logger.info(f"returning {len(accounts)} accounts")
+    return accounts, status.HTTP_200_OK
+
+
 ######################################################################
 # LIST ALL ACCOUNTS
 ######################################################################
@@ -69,7 +80,7 @@ def create_accounts():
 ######################################################################
 
 # ... place you code here to READ an account ...
-@app.route("/accounts/<int:account_id>",methods=["GET"])
+@app.route("/accounts/<int:account_id>", methods=["GET"])
 def get_accounts(account_id):
     """
     Reads an Account
@@ -78,7 +89,8 @@ def get_accounts(account_id):
     app.logger.info(f"request to read an account with id: {account_id}")
     account = Account.find(account_id)
     if not account:
-        abort(status.HTTP_404_NOT_FOUND, f"account with {account_id} not found")
+        abort(status.HTTP_404_NOT_FOUND,
+              f"account with {account_id} not found")
     return account.serialize(), status.HTTP_200_OK
 
 ######################################################################
