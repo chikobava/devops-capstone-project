@@ -143,10 +143,11 @@ class TestAccountService(TestCase):
 
     def test_list_all_accounts(self):
         """It should list all accounts"""
+        accounts = self._create_accounts(5)
         resp = self.client.get(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), len(accounts))
 
     def test_update_account(self):
         """It should update an account"""
