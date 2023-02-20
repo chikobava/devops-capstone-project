@@ -156,4 +156,22 @@ class TestAccountService(TestCase):
             f"{BASE_URL}/{account.id}",
             content_type="application/json"
         )
-        self.assertEqual(account.id,resp.json()["id"])
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.get_json()["name"], account.name)
+        account.name = "Update Test"
+        account.address = "Update Address"
+        resp = self.client.put(
+            f"{BASE_URL}/{account.id}",
+            json=account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code,status.HTTP_200_OK)
+        resp = self.client.get(
+            f"{BASE_URL}/{account.id}",
+            content_type="application/json"
+        )
+        self.assertEqual(resp.get_json()["name"],account.name)
+        self.assertEqual(resp.get_json()["address"],account.address)
+
+        
+
