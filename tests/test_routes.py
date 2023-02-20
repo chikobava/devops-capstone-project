@@ -165,13 +165,20 @@ class TestAccountService(TestCase):
             json=account.serialize(),
             content_type="application/json"
         )
-        self.assertEqual(resp.status_code,status.HTTP_200_OK)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         resp = self.client.get(
             f"{BASE_URL}/{account.id}",
             content_type="application/json"
         )
-        self.assertEqual(resp.get_json()["name"],account.name)
-        self.assertEqual(resp.get_json()["address"],account.address)
+        self.assertEqual(resp.get_json()["name"], account.name)
+        self.assertEqual(resp.get_json()["address"], account.address)
 
-        
-
+    def test_delete_account(self):
+        """It should delete an account"""
+        accounts = self._create_accounts(5)
+        resp = self.client.get(BASE_URL)
+        self.assertEqual(len(resp.get_json()), len(accounts))
+        resp = self.client.delete(f"{BASE_URL}/{accounts[0].id}")
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        resp = self.client.get(BASE_URL)
+        self.assertEqual(len(resp.get_json()), len(accounts)-1)
