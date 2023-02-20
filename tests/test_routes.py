@@ -132,7 +132,6 @@ class TestAccountService(TestCase):
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()
 
     def test_account_not_found(self):
         """It should not Read an Account that is not found"""
@@ -148,4 +147,31 @@ class TestAccountService(TestCase):
         resp = self.client.get(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), len(accounts))
+
+    def test_update_account(self):
+        """It should update an account"""
+        account = self._create_accounts(1)[0]
+        resp = self.client.get(
+            f"{BASE_URL}/{account.id}",
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.get_json()["name"], account.name)
+        account.name = "Update Test"
+        account.address = "Update Address"
+        resp = self.client.put(
+            f"{BASE_URL}/{account.id}",
+            json=account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code,status.HTTP_200_OK)
+        resp = self.client.get(
+            f"{BASE_URL}/{account.id}",
+            content_type="application/json"
+        )
+        self.assertEqual(resp.get_json()["name"],account.name)
+        self.assertEqual(resp.get_json()["address"],account.address)
+
+        
+

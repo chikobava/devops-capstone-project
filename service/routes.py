@@ -57,7 +57,9 @@ def create_accounts():
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
-
+######################################################################
+# LIST ALL ACCOUNTS
+######################################################################
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
     app.logger.info(f"request to read all accounts")
@@ -67,19 +69,9 @@ def list_accounts():
     app.logger.info(f"returning {len(accounts)} accounts")
     return accounts, status.HTTP_200_OK
 
-
-######################################################################
-# LIST ALL ACCOUNTS
-######################################################################
-
-# ... place you code here to LIST accounts ...
-
-
 ######################################################################
 # READ AN ACCOUNT
 ######################################################################
-
-# ... place you code here to READ an account ...
 @app.route("/accounts/<int:account_id>", methods=["GET"])
 def get_accounts(account_id):
     """
@@ -96,8 +88,21 @@ def get_accounts(account_id):
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
-
-# ... place you code here to UPDATE an account ...
+@app.route("/accounts/<int:account_id>", methods=["PUT"])
+def update_account(account_id):
+    """
+    Updates an Account
+    Will return the updated Account
+    """
+    app.logger.info(f"request to update an account with id: {account_id}")   
+    account = Account.find(account_id)
+    if not account:
+        abort(status.HTTP_404_NOT_FOUND,
+              f"account with {account_id} not found")
+    else:
+        account = account.deserialize(request.get_json())
+        account.update()
+    return account.serialize(), status.HTTP_200_OK
 
 
 ######################################################################
