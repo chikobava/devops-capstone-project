@@ -182,3 +182,20 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
         resp = self.client.get(BASE_URL)
         self.assertEqual(len(resp.get_json()), len(accounts)-1)
+
+    def test_error_handlers(self):
+        """It should test error handlers"""
+        resp = self.client.put(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        resp = self.client.delete(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        resp = self.client.post(f"{BASE_URL}/0")
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+    def test_delete_non_existent_account(self):
+        """It should return 404 when trying to remove non-existent account"""
+        resp = self.client.delete(f"{BASE_URL}/0")
+        self.assertEqual(resp.status_code,status.HTTP_404_NOT_FOUND)
+
+
+        
