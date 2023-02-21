@@ -16,7 +16,7 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_PASSWORD: ${{ secret.POSTGRES_PASSWORD }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: testdb
         options: >-
           --health-cmd pg_isready
@@ -37,4 +37,4 @@ jobs:
       - name: test with nosetests
         run: nosetests -v --with-spec --spec-color --with-coverage --cover-package=service
         env:
-            DATABASE_URI: "postgresql://postgres:${{ secret.POSTGRES_PASSWORD }}@postgres:5432/testdb"
+            DATABASE_URI: "postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/testdb"
