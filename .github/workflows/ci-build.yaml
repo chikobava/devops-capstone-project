@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.9-slim
     services:
-      postgress:
+      postgres:
         image: postgres:alpine
         ports:
           - 5432:5432
