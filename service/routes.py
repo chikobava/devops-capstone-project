@@ -64,7 +64,7 @@ def create_accounts():
 
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
-    app.logger.info(f"request to read all accounts")
+    app.logger.info("request to read all accounts")
     accounts = []
     for account in Account.all():
         accounts.append(account.serialize())
