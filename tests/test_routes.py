@@ -27,7 +27,7 @@ HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 ######################################################################
 
 
-class TestAccountService(TestCase):   
+class TestAccountService(TestCase):
     """Account Service Tests"""
     @classmethod
     def setUpClass(cls):
@@ -195,7 +195,7 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
         resp = self.client.post(f"{BASE_URL}/0")
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+
     def test_delete_non_existent_account(self):
         """It should return 404 when trying to remove non-existent account"""
         resp = self.client.delete(f"{BASE_URL}/0")
@@ -209,8 +209,17 @@ class TestAccountService(TestCase):
             'X-Frame-Options': 'SAMEORIGIN',
             'X-XSS-Protection': '1; mode=block',
             'X-Content-Type-Options': 'nosniff',
-            'Content-Security-Policy': 'default-src \'self\'; object-src \'none\'',
+            'Content-Security-Policy':
+                'default-src \'self\'; object-src \'none\'',
             'Referrer-Policy': 'strict-origin-when-cross-origin'
         }
         for k, v in headers.items():
             self.assertEqual(response.headers[k], v)
+
+    def test_cors_security(self):
+        """It should return a CORS header"""
+        response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # check for the cors header
+        self.assertEqual(
+            response.headers.get('Access-Control-Allow-Origin'), '*')
